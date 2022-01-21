@@ -26,9 +26,14 @@
             left: 0;
             right: 0;
             display: flex;
-            height: 3rem;
             box-sizing: border-box;
             backdrop-filter: blur(10px);
+        }
+
+        @media screen and (max-width: 992px) {
+            #form {
+                flex-flow: column;
+            }
         }
 
         input {
@@ -36,6 +41,7 @@
             padding: 0 1rem;
             border-radius: 2rem;
             margin: 0.25rem;
+            height: 2rem;
         }
 
         input:not(#input_name) {
@@ -56,6 +62,7 @@
             color: #fff;
             font-size: 1rem;
             font-weight: 700;
+            height: 2rem;
         }
 
         #messages {
