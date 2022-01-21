@@ -16,8 +16,6 @@ io.on('connection', (socket) => {
     console.log('connection made');
 
     socket.on('chat message', (message) => {
-        console.log(`Message: ${message.message}`);
-
         io.emit('chat message feedback', message);
     })
 
