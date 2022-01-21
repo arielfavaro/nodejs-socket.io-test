@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chitchat</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 3rem;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #form {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.25rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        input {
+            border: none;
+            padding: 0 1rem;
+            border-radius: 2rem;
+            margin: 0.25rem;
+        }
+
+        input:not(#input_name) {
+            flex-grow: 1;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        #form>button {
+            background: #2ddd93;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 2rem;
+            outline: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0px 12px;
+        }
+
+        #messages>li {
+            padding: 0.5rem 1rem;
+            background-color: #fff;
+            box-shadow: 0px 0px 18px #ccc;
+            margin-bottom: 10px;
+            border: 1px solid #40cdd3;
+        }
+
+        /* #messages>li:nth-child(odd) {
+            background: #efefef;
+        } */
+
+        .username {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .messagebox {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="input_name" autocomplete="off" placeholder="Nome" size="10" required />
+        <input id="input_message" autocomplete="off" placeholder="Mensagem" required />
+        <button>Enviar</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        var messages = document.getElementById('messages');
+        var form = document.getElementById('form');
+        var input_name = document.getElementById('input_name');
+        var input_message = document.getElementById('input_message');
+
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (input_message.value) {
+                socket.emit('chat message', { name: input_name.value, message: input_message.value });
+                input_message.value = '';
+            }
+        });
+
+
+        socket.on('chat message feedback', function (message) {
+            var item = document.createElement('li');
+            item.innerHTML = `
+                <p class="username">${message.name}</p>
+                <p class="messagebox">${message.message}</p>
+            `;
+            messages.appendChild(item);
+
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+</body>
+
+</html>
